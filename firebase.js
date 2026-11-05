@@ -1,4 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+// ============================================
+// ONE SCHOOL - CENTRAL FIREBASE INITIALIZATION
+// ============================================
+
+import { initializeApp, getApp, getApps }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 import {
     getAuth,
@@ -10,39 +15,26 @@ import {
     getFirestore
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import firebaseConfig from "./firebase-config.js";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCvpd7HxpLq4IJ22cMTldV3sanz35tt3H8",
-  authDomain: "best----bus-application.firebaseapp.com",
-  projectId: "best----bus-application",
-  storageBucket: "best----bus-application.firebasestorage.app",
-  messagingSenderId: "428353631166",
-  appId: "1:428353631166:web:e58e03cb28a52a790e3fef",
-  measurementId: "G-5XP2LE6FH1"
-};
+// Initialize only once
+const app = getApps().length
+    ? getApp()
+    : initializeApp(firebaseConfig);
 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-
-// Firebase Authentication
+// Authentication
 const auth = getAuth(app);
 
-
 // Keep users logged in
-setPersistence(
-    auth,
-    browserLocalPersistence
-);
+setPersistence(auth, browserLocalPersistence)
+    .catch(error => {
+        console.error("Firebase persistence error:", error);
+    });
 
-
-// Cloud Firestore
+// Firestore
 const db = getFirestore(app);
 
-
-// Export
+// Export common services
 export {
     app,
     auth,
